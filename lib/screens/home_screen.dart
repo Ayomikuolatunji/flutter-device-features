@@ -5,7 +5,7 @@ import 'package:net_ninja_course/widgets/places_list.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
 
-  final List<Place> placeItems = [];
+  final List<Place> placeItems = [Place(title: "Ajegunle")];
 
   @override
   Widget build(BuildContext context) {

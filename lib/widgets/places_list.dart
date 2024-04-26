@@ -16,6 +16,17 @@ class PlacesList extends StatelessWidget {
         ),
       );
     }
-    return const Text("");
+    return ListView.builder(
+      itemBuilder: ((ctx, index) => ListTile(
+            title: Text(
+              placeItems[index].title,
+              style: Theme.of(context)
+                  .textTheme
+                  .titleMedium!
+                  .copyWith(color: Theme.of(context).colorScheme.onBackground),
+            ),
+          )),
+      itemCount: placeItems.length,
+    );
   }
 }
