@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:net_ninja_course/screens/home_screen.dart';
+import 'package:net_ninja_course/routes.dart';
 
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
@@ -27,7 +28,7 @@ final theme = ThemeData().copyWith(
 
 void main() {
   runApp(
-    const MyApp(),
+    const ProviderScope(child: MyApp()),
   );
 }
 
@@ -36,9 +37,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Great Places',
-        theme: theme,
-        routes: {"/": (context) => HomeScreen()});
+    return MaterialApp.router(
+      title: 'Great Places',
+      theme: theme,
+      routerConfig: appRoutes(context),
+    );
   }
 }

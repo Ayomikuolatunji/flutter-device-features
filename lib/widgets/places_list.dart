@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:net_ninja_course/models/place.dart';
+import 'package:net_ninja_course/screens/place_detail_screen.dart';
 
 class PlacesList extends StatelessWidget {
   const PlacesList({super.key, required this.placeItems});
 
   final List<Place> placeItems;
+
+  void onViewDetailPlace(BuildContext context, Place place) {
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (ctx) => PlaceDetailScreen(place: (place))));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +24,9 @@ class PlacesList extends StatelessWidget {
     }
     return ListView.builder(
       itemBuilder: ((ctx, index) => ListTile(
+            onTap: () {
+              onViewDetailPlace(context, placeItems[index]);
+            },
             title: Text(
               placeItems[index].title,
               style: Theme.of(context)
