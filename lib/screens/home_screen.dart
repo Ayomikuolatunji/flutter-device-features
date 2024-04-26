@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:net_ninja_course/models/place.dart';
+import 'package:net_ninja_course/widgets/places_list.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class HomeScreen extends StatelessWidget {
+  HomeScreen({super.key});
+
+  final List<Place> placeItems = [];
 
   @override
   Widget build(BuildContext context) {
@@ -13,11 +17,8 @@ class Home extends StatelessWidget {
           IconButton(onPressed: () {}, icon: const Icon(Icons.add))
         ],
       ),
-      body: const Center(
-        child: Text(
-          "No places added yet.",
-          style: TextStyle(color: Colors.white),
-        ),
+      body: PlacesList(
+        placeItems: placeItems,
       ),
     );
   }

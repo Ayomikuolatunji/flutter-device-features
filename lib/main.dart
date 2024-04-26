@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:net_ninja_course/home.dart';
+import 'package:net_ninja_course/screens/home_screen.dart';
 
 final colorScheme = ColorScheme.fromSeed(
   brightness: Brightness.dark,
@@ -39,6 +39,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
         title: 'Great Places',
         theme: theme,
-        routes: {"/": (context) => const Home()});
+        routes: {"/": (context) => HomeScreen()});
   }
 }
