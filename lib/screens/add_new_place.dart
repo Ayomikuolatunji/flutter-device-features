@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:net_ninja_course/models/place.dart';
 import 'package:net_ninja_course/providers/user_places.dart';
+import 'package:net_ninja_course/widgets/image_input.dart';
 
 class AddNewPlace extends ConsumerStatefulWidget {
   const AddNewPlace({super.key});
@@ -42,6 +43,10 @@ class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
                   TextStyle(color: Theme.of(context).colorScheme.onBackground),
               controller: _titleController,
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            ImageInput(),
             const SizedBox(
               height: 16,
             ),
