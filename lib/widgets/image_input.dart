@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ImageInput extends StatefulWidget {
   const ImageInput({super.key});
@@ -10,7 +13,20 @@ class ImageInput extends StatefulWidget {
 }
 
 class _ImageInputState extends State<ImageInput> {
-  void _takePicture() async {}
+  File? _selectedImage;
+  void _takePicture() async {
+    final ImagePicker imagePicker = ImagePicker();
+    final pickedImage =
+        await imagePicker.pickImage(source: ImageSource.gallery, maxWidth: 600);
+
+    if (pickedImage == null) {
+      return;
+    } else {
+      setState(() {
+        _selectedImage = File(pickedImage.path);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,17 +36,33 @@ class _ImageInputState extends State<ImageInput> {
       onPressed: _takePicture,
     );
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 1,
-          color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+    if (_selectedImage != null) {
+      content = Image.file(
+        _selectedImage!,
+        fit: BoxFit.cover,
+      );
+    }
+
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              width: 1,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+            ),
+          ),
+          height: 250,
+          width: double.infinity,
+          alignment: Alignment.center,
+          child: content,
         ),
-      ),
-      height: 250,
-      width: double.infinity,
-      alignment: Alignment.center,
-      child: content,
+        Row(
+          children: [
+            TextButton(onPressed: onPressed, child: Text("Change "))
+          ],
+        )
+      ],
     );
   }
 }

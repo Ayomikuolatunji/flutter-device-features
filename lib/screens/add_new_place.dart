@@ -46,7 +46,7 @@ class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
             const SizedBox(
               height: 10,
             ),
-            ImageInput(),
+            const ImageInput(),
             const SizedBox(
               height: 16,
             ),
