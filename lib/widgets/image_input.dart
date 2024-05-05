@@ -16,8 +16,10 @@ class _ImageInputState extends State<ImageInput> {
   File? _selectedImage;
   void _takePicture() async {
     final ImagePicker imagePicker = ImagePicker();
-    final pickedImage =
-        await imagePicker.pickImage(source: ImageSource.gallery, maxWidth: 600);
+    final pickedImage = await imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxWidth: double.infinity,
+        maxHeight: double.infinity);
 
     if (pickedImage == null) {
       return;
@@ -26,6 +28,12 @@ class _ImageInputState extends State<ImageInput> {
         _selectedImage = File(pickedImage.path);
       });
     }
+  }
+
+  void _removeAddedPicture() {
+     setState(() {
+      _selectedImage = null;
+    });
   }
 
   @override
@@ -43,6 +51,19 @@ class _ImageInputState extends State<ImageInput> {
       );
     }
 
+    final shouldChange = _selectedImage != null
+        ? Row(
+            children: [
+              TextButton(
+                  onPressed: _takePicture,
+                  child: const Text("Change uploaded image")),
+              const Spacer(),
+              TextButton(
+                  onPressed: _removeAddedPicture, child: const Text("Remove Image"))
+            ],
+          )
+        : const Text("");
+
     return Column(
       children: [
         Container(
@@ -57,11 +78,7 @@ class _ImageInputState extends State<ImageInput> {
           alignment: Alignment.center,
           child: content,
         ),
-        Row(
-          children: [
-            TextButton(onPressed: onPressed, child: Text("Change "))
-          ],
-        )
+        shouldChange
       ],
     );
   }
