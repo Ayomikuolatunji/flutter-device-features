@@ -1,10 +1,11 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ImageInput extends StatefulWidget {
-  const ImageInput({super.key});
+  const ImageInput({super.key, required this.selectedImage});
+
+  final void Function(File selectedImage) selectedImage;
 
   @override
   State<ImageInput> createState() {
@@ -27,11 +28,12 @@ class _ImageInputState extends State<ImageInput> {
       setState(() {
         _selectedImage = File(pickedImage.path);
       });
+      widget.selectedImage(File(pickedImage.path));
     }
   }
 
   void _removeAddedPicture() {
-     setState(() {
+    setState(() {
       _selectedImage = null;
     });
   }
@@ -59,7 +61,8 @@ class _ImageInputState extends State<ImageInput> {
                   child: const Text("Change uploaded image")),
               const Spacer(),
               TextButton(
-                  onPressed: _removeAddedPicture, child: const Text("Remove Image"))
+                  onPressed: _removeAddedPicture,
+                  child: const Text("Remove Image"))
             ],
           )
         : const Text("");
