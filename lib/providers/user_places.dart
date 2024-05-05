@@ -8,7 +8,7 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
     final newPlace = Place(
         title: place.title,
         image: place.image,
-        placeDetails: place.placeDetails);
+        placeLocation: place.placeLocation);
     state = [newPlace, ...state];
   }
 }

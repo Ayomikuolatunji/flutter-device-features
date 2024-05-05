@@ -17,20 +17,28 @@ class AddNewPlace extends ConsumerStatefulWidget {
 class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
   final _titleController = TextEditingController();
   File? _selectedImage;
+  double? _latitude;
+  double? _longitude;
+  String? _address;
 
   void savePlace() {
     final enteredText = _titleController.text;
     if (enteredText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Please provide the place title")));
+
+      return;
     }
     if (_selectedImage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text("Please select image to continue")));
+      return;
     }
-    ref
-        .read(userPlacesNotifier.notifier)
-        .addNewPlace(Place(title: enteredText, image: _selectedImage!));
+    ref.read(userPlacesNotifier.notifier).addNewPlace(Place(
+        title: enteredText,
+        image: _selectedImage!,
+        placeLocation: PlaceLocation(
+            address: _address!, latitude: _latitude!, longitude: _longitude!)));
 
     Navigator.of(context).pop();
   }
@@ -38,6 +46,14 @@ class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
   void onSelectedImage(File selectedImage) {
     setState(() {
       _selectedImage = selectedImage;
+    });
+  }
+
+  void onSelectLocationDetails(PlaceLocation placeDetails) {
+    setState(() {
+      _latitude = placeDetails.latitude;
+      _longitude = placeDetails.longitude;
+      _address = placeDetails.address;
     });
   }
 
@@ -66,7 +82,7 @@ class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
             const SizedBox(
               height: 10,
             ),
-            const LocationInput(),
+            LocationInput(onSelectLocationDetails: onSelectLocationDetails),
             const SizedBox(
               height: 16,
             ),

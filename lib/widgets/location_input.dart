@@ -1,23 +1,28 @@
 import 'dart:convert';
-
 import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
+import 'package:net_ninja_course/models/place.dart';
 
 class LocationInput extends StatefulWidget {
-  const LocationInput({super.key});
-
+  const LocationInput({super.key, required this.onSelectLocationDetails});
+  final void Function(PlaceLocation placeLocation) onSelectLocationDetails;
   @override
   State<LocationInput> createState() => _LocationInputState();
 }
 
 class _LocationInputState extends State<LocationInput> {
-  // LocationData? _pickedLocation;
   bool _isGettingLocation = false;
+  LocationData? _pickedLocation;
   String key = "AIzaSyDCdPAtjHSjjzdB4YZClrAHo-TGDJfMszc";
 
+  String get locationImage {
+    final double? lat = _pickedLocation!.latitude;
+    final double? long = _pickedLocation!.longitude;
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$long=Brooklyn+Bridge,New+York,NY&zoom=16&size=600x300&maptype=roadmap&markers=color:blue%7Clabel:A%7C40.$lat,-$long&key=$key';
+  }
+
   void getCurrentLocation() async {
-    print("object");
     Location location = Location();
     bool serviceEnabled;
     PermissionStatus permissionGranted;
@@ -40,20 +45,27 @@ class _LocationInputState extends State<LocationInput> {
       _isGettingLocation = true;
     });
     locationData = await location.getLocation();
-    print(locationData);
     setState(() {
-      // _pickedLocation = locationData;
       _isGettingLocation = false;
+      _pickedLocation = locationData;
+      location;
     });
-    final lat = locationData.latitude;
-    final long = locationData.altitude;
+    final double? lat = locationData.latitude;
+    final double? long = locationData.longitude;
+
+    if (long == null || lat == null) {
+      return;
+    }
 
     Uri url = Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$long&key=$key');
 
     final res = await http.get(url);
     final resData = json.decode(res.body);
-    print(resData["results"][0]["formatted_address"]);
+    widget.onSelectLocationDetails(PlaceLocation(
+        longitude: long,
+        latitude: lat,
+        address: resData["results"][0]["formatted_address"]));
   }
 
   @override
@@ -72,6 +84,12 @@ class _LocationInputState extends State<LocationInput> {
             .textTheme
             .bodyLarge!
             .copyWith(color: Theme.of(context).colorScheme.onBackground),
+      );
+    }
+    if (_pickedLocation != null) {
+      previewContent = Image.network(
+        locationImage,
+        fit: BoxFit.cover,
       );
     }
     return Column(
