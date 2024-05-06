@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:net_ninja_course/routes.dart';
@@ -26,7 +27,8 @@ final theme = ThemeData().copyWith(
   ),
 );
 
-void main() {
+Future main() async {
+    await dotenv.load(fileName: ".env");
   runApp(
     const ProviderScope(child: MyApp()),
   );

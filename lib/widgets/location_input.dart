@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
@@ -14,7 +15,8 @@ class LocationInput extends StatefulWidget {
 class _LocationInputState extends State<LocationInput> {
   bool _isGettingLocation = false;
   LocationData? _pickedLocation;
-  String key = "AIzaSyDCdPAtjHSjjzdB4YZClrAHo-TGDJfMszc";
+  String? key = dotenv.env['GOOGLE_API_KEY'];
+
 
   String get locationImage {
     final double? lat = _pickedLocation!.latitude;
