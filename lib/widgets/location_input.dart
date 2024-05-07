@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import "package:http/http.dart" as http;
 import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:net_ninja_course/models/place.dart';
+import 'package:net_ninja_course/screens/map_screen.dart';
 
 class LocationInput extends StatefulWidget {
   const LocationInput({super.key, required this.onSelectLocationDetails});
@@ -17,6 +19,17 @@ class _LocationInputState extends State<LocationInput> {
   LocationData? _pickedLocation;
   String? key = dotenv.env['GOOGLE_API_KEY'];
 
+  Future savePlace(double lat, double lng) async {
+    Uri url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&key=$key');
+
+    final res = await http.get(url);
+    final resData = json.decode(res.body);
+    widget.onSelectLocationDetails(PlaceLocation(
+        longitude: lng,
+        latitude: lat,
+        address: resData["results"][0]["formatted_address"]));
+  }
 
   String get locationImage {
     final double? lat = _pickedLocation!.latitude;
@@ -53,21 +66,25 @@ class _LocationInputState extends State<LocationInput> {
       location;
     });
     final double? lat = locationData.latitude;
-    final double? long = locationData.longitude;
+    final double? lng = locationData.longitude;
 
-    if (long == null || lat == null) {
+    if (lng == null || lat == null) {
       return;
     }
 
-    Uri url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$long&key=$key');
+    await savePlace(lat, lng);
+  }
 
-    final res = await http.get(url);
-    final resData = json.decode(res.body);
-    widget.onSelectLocationDetails(PlaceLocation(
-        longitude: long,
-        latitude: lat,
-        address: resData["results"][0]["formatted_address"]));
+  Future _onSelectOnMap() async {
+    final pickedLocation =
+        await Navigator.of(context).push<LatLng>(MaterialPageRoute(
+      builder: (context) {
+        return const MapScreen();
+      },
+    ));
+
+    await savePlace(pickedLocation?.latitude ?? 37.422,
+        pickedLocation?.longitude ?? 122.084);
   }
 
   @override
@@ -88,6 +105,7 @@ class _LocationInputState extends State<LocationInput> {
             .copyWith(color: Theme.of(context).colorScheme.onBackground),
       );
     }
+    print(_pickedLocation);
     if (_pickedLocation != null) {
       previewContent = Image.network(
         locationImage,
@@ -119,7 +137,9 @@ class _LocationInputState extends State<LocationInput> {
                 )),
             TextButton.icon(
                 icon: const Icon(Icons.map),
-                onPressed: () {},
+                onPressed: () async {
+                  await _onSelectOnMap();
+                },
                 label: const Text(
                   "Select on map",
                 ))

@@ -13,12 +13,14 @@ class Place {
   final PlaceLocation placeLocation;
 }
 
-class PlaceLocation{
-  PlaceLocation(
-      {required this.longitude, required this.latitude, required this.address})
-      : id = uuid.v4();
-  final String id;
+class PlaceLocation {
   final double latitude;
   final double longitude;
   final String address;
+
+  const PlaceLocation({
+    required this.latitude,
+    required this.longitude,
+    required this.address,
+  });
 }

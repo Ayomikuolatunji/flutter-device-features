@@ -3,6 +3,8 @@
         android:label="net_ninja_course"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyDCdPAtjHSjjzdB4YZClrAHo-TGDJfMszc"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

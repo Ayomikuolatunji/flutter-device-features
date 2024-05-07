@@ -23,7 +23,7 @@ class PlacesList extends StatelessWidget {
       );
     }
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: ListView.builder(
         itemBuilder: ((ctx, index) => ListTile(
               onTap: () {
@@ -36,9 +36,14 @@ class PlacesList extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground),
               ),
-              subtitle: Text(placeItems[index].placeLocation.address,
+              subtitle: Text(
+                placeItems[index].placeLocation.address,
                 style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground),
+              ),
+              trailing: TextButton(
+                onPressed: () {},
+                child: const Icon(Icons.more_vert),
               ),
             )),
         itemCount: placeItems.length,

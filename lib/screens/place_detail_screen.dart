@@ -1,6 +1,9 @@
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:net_ninja_course/models/place.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:net_ninja_course/screens/map_screen.dart';
 
 final googleapikey = dotenv.env['GOOGLE_API_KEY'];
 
@@ -35,9 +38,21 @@ class PlaceDetailScreen extends StatelessWidget {
               right: 0,
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 70,
-                    backgroundImage: NetworkImage(locationImage),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return  MapScreen(
+                            location: place.placeLocation,
+                            isSelecting: false,
+                          );
+                        },
+                      ));
+                    },
+                    child: CircleAvatar(
+                      radius: 100,
+                      backgroundImage: NetworkImage(locationImage),
+                    ),
                   ),
                   Container(
                     padding: const EdgeInsets.symmetric(
