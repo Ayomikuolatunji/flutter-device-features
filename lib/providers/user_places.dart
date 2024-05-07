@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:net_ninja_course/models/place.dart';
 import 'package:path_provider/path_provider.dart' as sysPath;
@@ -6,7 +8,7 @@ import "package:sqflite/sqflite.dart" as sql;
 import 'package:sqflite/sqlite_api.dart';
 
 Future<Database> databaseConfig() async {
-      final dbPath = await sql.getDatabasesPath();
+  final dbPath = await sql.getDatabasesPath();
   final db = await sql.openDatabase(path.join(dbPath, "placed.db"),
       onCreate: (db, version) => {
             db.execute(
@@ -30,7 +32,6 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
         placeLocation: place.placeLocation);
 
     final db = await databaseConfig();
-    state = [newPlace, ...state];
     db.insert("user_places", {
       "id": newPlace.id,
       "title": newPlace.title,
@@ -41,12 +42,20 @@ class UserPlacesNotifier extends StateNotifier<List<Place>> {
     });
   }
 
-  void loadPlaces() async {
-    final dbPath = await sql.getDatabasesPath();
+  Future<void> loadPlaces() async {
     final db = await databaseConfig();
-    final data=await db.query("SELECT * FROM user_places");
+    final data = await db.query("user_places");
+    final userData = data
+        .map((row) => Place(
+            image: File(row["image"] as String),
+            title: row["title"] as String,
+            placeLocation: PlaceLocation(
+                address: row["address"] as String,
+                latitude: row["lat"] as double,
+                longitude: row["lng"] as double)))
+        .toList();
 
-    return data;
+    state = userData;
   }
 }
 
