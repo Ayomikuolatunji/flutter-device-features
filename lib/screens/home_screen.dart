@@ -35,6 +35,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               icon: const Icon(Icons.add))
         ],
       ),
+      
       body: FutureBuilder(
         future: _placesFuture,
         builder: ((context, snapshot) =>
